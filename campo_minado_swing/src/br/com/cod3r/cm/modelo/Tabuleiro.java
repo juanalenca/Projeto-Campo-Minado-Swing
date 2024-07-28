@@ -6,9 +6,9 @@ import java.util.function.Predicate;
 
 public class Tabuleiro implements CampoObservador{
 	
-	private int linhas;
-	private int colunas;
-	private int minas;
+	private final int linhas;
+	private final int colunas;
+	private final  int minas;
 	
 	
 	private final List<Campo> campos = new ArrayList<>();
@@ -25,6 +25,10 @@ public class Tabuleiro implements CampoObservador{
 		sortearMinas();
 	}
 	
+	
+	public void paraCadaCampo(Consumer<Campo> funcao) {
+			campos.forEach(funcao);
+	}
 	
 	
 	public void registrarObservador(Consumer<ResultadoEvento> observador) {
@@ -101,6 +105,16 @@ public class Tabuleiro implements CampoObservador{
 	}
 
 
+	public int getLinhas() {
+		return linhas;
+	}
+	
+
+	public int getColunas() {
+		return colunas;
+	}
+
+	
 	@Override
 	public void eventoOcorreu(Campo campo, CampoEvento evento) {
 		if(evento == CampoEvento.EXPLODIR) {
@@ -116,6 +130,7 @@ public class Tabuleiro implements CampoObservador{
 	private void mostrarMinas() {
 		campos.stream()
 			.filter(campo -> campo.isMinado())
+			.filter(campo -> !campo.isMarcado())
 			.forEach(campo -> campo.setAberto(true));
 	}
 	
